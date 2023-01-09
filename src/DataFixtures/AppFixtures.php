@@ -22,6 +22,7 @@ class AppFixtures extends Fixture
     {
         for($i=1; $i <= 50 ; $i++) {
             $ingredient = new Ingredient();
+            /*$ingredient->setName('Ingrédient '. $i)*/
             $ingredient->setName($this->faker->word())
                 ->setPrice(mt_rand(0,100));
             $manager->persist($ingredient);
