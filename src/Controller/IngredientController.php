@@ -45,6 +45,13 @@ class IngredientController extends AbstractController
          ]);*/
     }
 
+    /**
+     * This controller show a form which create a new ingredient
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/ingredient/nouveau', 'ingredient.new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $manager) : Response
     {
@@ -69,4 +76,74 @@ class IngredientController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+
+   /* #[Route('ingredient/edition/{id}', name: 'ingredient.edit', methods: ['GET', 'POST'])]
+    public function edit(IngredientRepository $repository, int $id, EntityManagerInterface $manager) : Response
+    {
+        $ingredient = $repository ->findOneBy(["id" => $id]);
+        $form = $this->createForm(IngredientType::class, $ingredient);
+        return $this->render('pages/ingredient/edit.html.twig',
+        [
+            'form' => $form->createView()
+        ]);
+    }*/
+
+    /**
+     * This controller modify an ingredient
+     *
+     * @param Ingredient $ingredient
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    #[Route('ingredient/edition/{id}', name: 'ingredient.edit', methods: ['GET', 'POST'])]
+    public function edit(Ingredient $ingredient,Request $request, EntityManagerInterface $manager) : Response
+    {
+        //dd($ingredient);
+        $form = $this->createForm(IngredientType::class, $ingredient);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $ingredient= $form->getData();
+
+            $manager->persist($ingredient);
+            $manager->flush();
+
+            $this->AddFlash(
+                'success',
+                'Votre Ingrédient a été modifié avec succés !'
+            );
+
+            return $this->redirectToRoute('ingredient.index');
+        }
+
+        return $this->render('pages/ingredient/edit.html.twig',
+            [
+                'form' => $form->createView()
+            ]);
+    }
+
+    #[Route('/ingredient/suppression/{id}', name: 'ingredient.delete', methods: ['GET'])]
+    public function delete(EntityManagerInterface $manager, Ingredient $ingredient) : Response
+    {
+
+        if(!$ingredient){
+            $this->AddFlash(
+                'success',
+                'L\'Ingrédient en question n\'a pas été trouvé !'
+            );
+            $this->redirectToRoute('ingredient.index');
+        }
+
+        $manager->remove($ingredient);
+        $manager->flush();
+
+        $this->AddFlash(
+            'success',
+            'Votre Ingrédient a été supprimé avec succés !'
+        );
+
+        return $this->redirectToRoute('ingredient.index');
+    }
+
 }
