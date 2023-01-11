@@ -20,8 +20,8 @@ class Ingredient
     #[Assert\Length(
         min: 2,
         max: 50,
-        minMessage: 'Your first name must be at least {{ limit }} characters long',
-        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+        minMessage: 'The name must be at least {{ limit }} characters long',
+        maxMessage: 'The name cannot be longer than {{ limit }} characters',
     )]
     #[Assert\NotBlank()]
     private ?string $name = null;
