@@ -8,10 +8,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RecipeController extends AbstractController
 {
-    #[Route('/recipe', name: 'app_recipe')]
+    #[Route('/recipe', name: 'recette.index', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('recipe/index.html.twig', [
+        return $this->render('pages/recipe/index.html.twig', [
             'controller_name' => 'RecipeController',
         ]);
     }
